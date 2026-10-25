@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- PICKLEPWR QR FIX BUILD 2026-10-05 -->
+<title>PicklePWR Live Scheduler</title>
+<style>
+:root{--bg:#f5f8f7;--card:#fff;--ink:#17332f;--muted:#6d7d79;--accent:#54b7a3;--accent2:#9ad8cc;--danger:#d95d5d;--line:#dce8e4;--dark:#12302c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+header{background:var(--dark);color:#fff;padding:18px 22px;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:22px}header small{opacity:.75}
+main{max-width:1250px;margin:auto;padding:18px}
+.grid{display:grid;grid-template-columns:400px minmax(0,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 2px 10px #12302c0a}
+h2,h3{margin:0 0 12px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+input,select,button{font:inherit}input[type=text],input[type=number],select{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px}
+button{border:0;border-radius:9px;padding:10px 13px;cursor:pointer;background:var(--accent);color:#fff;font-weight:700}
+button.secondary{background:#e8f2ef;color:var(--ink)}button.danger{background:var(--danger)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:#f0f7f5;border-radius:10px;padding:10px;text-align:center}.stat b{display:block;font-size:20px}
+.playerlist{max-height:650px;overflow:auto;margin-top:10px;padding-right:4px}.player-header{display:grid;grid-template-columns:32px minmax(0,125px) minmax(0,110px) 75px minmax(0,125px);gap:1px;align-items:center;padding:7px 4px;background:#f0f7f5;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}.player{display:grid;grid-template-columns:32px minmax(0,125px) minmax(0,110px) 75px minmax(0,125px);gap:1px;align-items:center;border-bottom:1px solid #edf2f0;padding:9px 4px}.player input[type=checkbox]{width:18px;height:18px;margin:0}.player .name-input,.player .level-select,.player .partner-select{width:100%;min-width:0;padding:7px 6px;border:1px solid var(--line);border-radius:8px}.partner-lock-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin:0;width:100%}.partner-lock-select{width:42px!important;min-width:42px!important;padding:7px 5px!important;text-align:center;font-size:16px;cursor:pointer}.partner-lock-cell{display:flex;align-items:center;justify-content:center;min-width:0}.partner-lock-name{font-size:13px;color:var(--muted);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.player .fieldwrap{min-width:0}.player .status{display:block;color:var(--muted);font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player .leavebtn{width:100%;padding:7px 5px;font-size:10px;white-space:normal;line-height:1.15}.playerlist-title{font-size:11px;color:var(--muted);margin:0 0 6px}.roundbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.roundbtn{background:#eef3f1;color:var(--ink);padding:8px 10px}.roundbtn.active{background:var(--accent);color:#fff}.roundbtn.locked{outline:2px solid #17332f;background:#dfece9}
+.courts{display:grid;grid-template-columns:repeat(3,minmax(320px,1fr));gap:14px;width:100%;min-width:0;box-sizing:border-box}
+.court{border:1.5px solid var(--line);border-radius:14px;padding:13px;background:#fbfdfc;min-width:0;box-sizing:border-box}.court.unavailable{opacity:.7;border-style:dashed}.court.unavailable .empty{min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center}.courthead{display:flex;justify-content:space-between;font-weight:800;margin-bottom:10px}
+.team{background:#f2f7f5;border-radius:10px;padding:10px;margin:6px 0}.teamlabel{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}.teamnames{font-size:15px;font-weight:750}.vs{text-align:center;color:var(--muted);font-size:12px;font-weight:800;margin:5px 0}.scorebox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.scorelabel{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px}.scorebox input{width:100%;text-align:center;font-size:22px;font-weight:800;padding:10px}
+.score{display:flex;gap:8px;margin-top:9px}.score input{width:50%;text-align:center;font-size:18px}
+.complete{color:#247a63;font-size:12px;font-weight:800}.lockedtag{color:#17332f;background:#dfece9;border-radius:20px;padding:4px 8px;font-size:11px}
+.tablewrap{overflow:hidden;border:1.5px solid var(--line);border-radius:10px;background:#fff}.stats{width:100%;border-collapse:collapse}.stats th,.stats td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}.stats th{background:#f0f7f5}
+.resting-dot{display:inline-block;width:9px;height:9px;background:#e53935;border-radius:50%;margin-right:7px;vertical-align:middle;box-shadow:0 0 0 2px rgba(229,57,53,.12)}
+.resting-name{display:inline-flex;align-items:center}
+.notice{padding:10px;border-radius:10px;background:#fff6dc;color:#765b12;font-size:13px;margin-bottom:12px}.timing-note{font-size:12px;color:var(--muted)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+#roundView{border:1.5px solid var(--line);border-radius:12px;padding:10px;margin-top:12px;background:#fff;width:100%;box-sizing:border-box;min-width:0;overflow:visible}
+#beginnerStats,#intermediateStats{background:#fff}
+
+@media(max-width:1050px){.grid{grid-template-columns:1fr}.courts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.courts{grid-template-columns:1fr}.statrow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1050px){.card > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}}
+@media(max-width:620px){.player-header{grid-template-columns:28px minmax(105px,1.25fr) minmax(95px,1.05fr) 76px 105px}.player{grid-template-columns:28px minmax(105px,1.25fr) minmax(95px,1.05fr) 76px 105px;align-items:center}.player .leavebtn{width:100%;margin-top:2px}.player .status{font-size:9px}.statrow{grid-template-columns:repeat(3,1fr)}}
+.player-lock-line{display:none}.partner-lock-cell{display:flex;align-items:center;justify-content:center;min-width:0;min-height:34px}.partner-lock-cell .partner-lock-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;min-width:0}.partner-lock-cell .partner-lock-select{flex:0 0 44px;width:44px!important;min-width:44px!important;padding:6px 4px!important;font-size:17px}.partner-lock-cell .partner-lock-name{display:block;width:100%;text-align:center;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player-header{min-height:34px}
+.live-courts-card,.live-leaderboard-card{width:100%;max-width:none;box-sizing:border-box;padding:22px 24px;}
+.live-courts-card #roundView{width:100%;box-sizing:border-box;}
+.live-leaderboard-card>div{max-width:none;}
+.live-leaderboard-card .tablewrap{width:100%;box-sizing:border-box;}
+.live-leaderboard-card table{width:100%;table-layout:auto;}
+@media(max-width:900px){.live-courts-card,.live-leaderboard-card{padding:18px 16px;}}
+
+/* Live Wins Leaderboard containment */
+#beginnerStats, #intermediateStats { width:100%; box-sizing:border-box; }
+.card .tablewrap { max-width:100%; box-sizing:border-box; overflow-x:hidden; }
+.card .stats { width:100%; table-layout:auto; box-sizing:border-box; }
+@media (max-width:1050px){
+  .card > div[style*="grid-template-columns"] { grid-template-columns:1fr !important; }
+}
+
+.live-courts-card{width:100%;box-sizing:border-box;min-width:0;padding:18px;}
+.live-courts-card #roundView{width:100%;min-width:0;}
+.live-courts-card .court{min-width:0;box-sizing:border-box;}
+.live-courts-card .teamnames{overflow-wrap:anywhere;}
+@media(max-width:1050px){.grid{grid-template-columns:1fr;}.live-courts-card{padding:16px;}}
+
+@media (max-width:900px){
+.player-header,.player{grid-template-columns:28px minmax(145px,1.35fr) minmax(125px,1.15fr) 78px minmax(118px,1fr);gap:2px;font-size:10px}
+.player .leavebtn{font-size:9px}
+.partner-lock-name{font-size:11px}
+}
+
+/* Tighter player-list middle columns */
+.player-table th, .player-table td { padding-left: 6px !important; padding-right: 6px !important; }
+.player-table th:nth-child(2), .player-table td:nth-child(2) { padding-right: 3px !important; }
+.player-table th:nth-child(3), .player-table td:nth-child(3) { padding-left: 3px !important; padding-right: 3px !important; }
+.player-table th:nth-child(4), .player-table td:nth-child(4) { padding-left: 3px !important; }
+.player-table .locked-partner-cell { white-space: normal; }
+
+</style>
+
+<style id="picklepwr-layout-fix-final">
+/* Responsive wide-screen dashboard: controls top, courts full-width, players + leaderboard below */
+html, body { width:100%; max-width:100%; }
+main { width:100% !important; max-width:none !important; margin:0 auto !important; padding:18px clamp(12px, 1.8vw, 30px) !important; }
+.grid { display:grid !important; width:100% !important; max-width:none !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; grid-template-areas:"controls controls" "courts courts" "players leaderboard" "completed completed"; align-items:start; gap:16px !important; }
+.grid > section { display:contents !important; min-width:0 !important; }
+.grid > section:first-child > .card:first-child { grid-area:controls; width:100% !important; min-width:0 !important; margin:0 !important; display:block; }
+.grid > section:first-child > .card:nth-child(2) { grid-area:players; width:100% !important; min-width:0 !important; margin:0 !important; }
+.grid > section:nth-child(2) > .live-courts-card { grid-area:courts; width:100% !important; min-width:0 !important; max-width:none !important; margin:0 !important; overflow:visible !important; }
+.grid > section:nth-child(2) > .live-leaderboard-card { grid-area:leaderboard; width:100% !important; min-width:0 !important; max-width:none !important; margin:0 !important; }
+.grid > section:nth-child(2) > .completed-games-card { grid-area:completed; width:100% !important; min-width:0 !important; max-width:none !important; margin:0 !important; }
+.grid > section:first-child > .card:first-child h2 { margin-bottom:12px; }
+.controls { display:grid !important; grid-template-columns:repeat(5,minmax(125px,1fr)) !important; gap:10px !important; align-items:end; }
+.actions { display:flex !important; flex-wrap:wrap; gap:8px !important; margin-top:10px; }
+.grid > section:first-child > .card:first-child > .notice { display:inline-block; vertical-align:top; width:calc(50% - 6px); margin-top:12px !important; }
+.statrow { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
+.grid > section:nth-child(2) > .live-courts-card .courts { display:grid !important; width:100% !important; max-width:none !important; min-width:0 !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:14px !important; }
+.grid > section:nth-child(2) > .live-courts-card .court { min-width:0 !important; max-width:100% !important; }
+.grid > section:nth-child(2) > .live-courts-card .teamnames { white-space:normal !important; overflow-wrap:anywhere; word-break:normal; }
+@media (min-width:1500px) {
+  .grid > section:nth-child(2) > .live-courts-card .courts { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+}
+@media (max-width:1100px) {
+  .grid { grid-template-columns:minmax(0,1fr) !important; grid-template-areas:"controls" "courts" "players" "leaderboard" "completed"; }
+  .controls { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .statrow { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .grid > section:nth-child(2) > .live-courts-card .courts { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+@media (max-width:650px) {
+  main { padding:10px !important; }
+  .controls { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .grid > section:nth-child(2) > .live-courts-card .courts { grid-template-columns:1fr !important; }
+  .grid > section:first-child > .card:first-child > .notice { width:100%; }
+  .statrow { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+</style>
+
+
+<style id="picklepwr-compact-player-layout">
+/* Use the full roster panel width and reduce excessive vertical spacing. */
+.player-header,
+.player {
+  width:100% !important;
+  grid-template-columns:32px minmax(150px,1.45fr) minmax(105px,1fr) minmax(78px,.72fr) minmax(130px,1fr) !important;
+  gap:6px !important;
+}
+.player { padding:5px 6px !important; min-height:0 !important; }
+.player-header { padding:7px 6px !important; margin-bottom:4px !important; }
+.player .name-input,
+.player .level-select,
+.player .partner-select { padding:6px 7px !important; }
+.player .status { margin-top:2px !important; font-size:10px !important; }
+.player .leavebtn { padding:6px 7px !important; white-space:nowrap !important; }
+.playerlist { max-height:650px; }
+@media(max-width:900px) {
+  .player-header,.player {
+    grid-template-columns:28px minmax(125px,1.3fr) minmax(95px,1fr) 76px minmax(108px,.95fr) !important;
+    gap:4px !important;
+  }
+}
+@media(max-width:620px) {
+  .player-header,.player {
+    grid-template-columns:28px minmax(105px,1.25fr) minmax(95px,1.05fr) 76px 105px !important;
+    gap:2px !important;
+  }
+  .player .leavebtn { white-space:normal !important; }
+}
+</style>
+
+
+<style id="picklepwr-locked-partner-display-fix">
+/* Keep the Locked Partner heading centered over the control column. */
+.player-header {
+  grid-template-columns:32px minmax(150px,1.45fr) minmax(105px,1fr) minmax(78px,.72fr) minmax(130px,1fr) !important;
+}
+.player-header > span:nth-child(3) {
+  text-align:center !important;
+  justify-self:stretch;
+  white-space:normal;
+  line-height:1.2;
+}
+/* Give the native select enough room to show the lock emoji and dropdown arrow. */
+.partner-lock-cell .partner-lock-wrap {
+  align-items:center !important;
+  width:100% !important;
+}
+.partner-lock-cell .partner-lock-select {
+  box-sizing:border-box !important;
+  width:60px !important;
+  min-width:60px !important;
+  max-width:60px !important;
+  height:42px;
+  padding:6px 5px !important;
+  text-align:center !important;
+  text-align-last:center;
+  font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",system-ui,sans-serif !important;
+  font-size:18px !important;
+  line-height:1.2;
+}
+.partner-lock-cell .partner-lock-name {
+  text-align:center !important;
+}
+@media(max-width:900px) {
+  .player-header {
+    grid-template-columns:28px minmax(125px,1.3fr) minmax(95px,1fr) 76px minmax(108px,.95fr) !important;
+  }
+}
+@media(max-width:620px) {
+  .player-header {
+    grid-template-columns:28px minmax(105px,1.25fr) minmax(95px,1.05fr) 76px 105px !important;
+  }
+}
+</style>
+
+
+<style id="picklepwr-player-leaderboard-40-60">
+/* Desktop balance: Players 40%, Live Wins Leaderboard 60%. */
+@media (min-width:1101px) {
+  .grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) !important; }
+  .grid > section:first-child > .card:nth-child(2) { min-width:0 !important; }
+  .grid > section:nth-child(2) > .live-leaderboard-card { min-width:0 !important; }
+}
+</style>
+
+
+<style id="picklepwr-court-win-button-layout">
+/* Keep the two winner buttons side-by-side, evenly sized, and on one line.
+   Existing button colors are intentionally unchanged. */
+.grid > section:nth-child(2) > .card:first-child .court > .actions {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  align-items:stretch;
+  gap:8px !important;
+  width:100%;
+  min-width:0;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .actions > button {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  padding:10px 6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  font-size:clamp(10px, 0.9vw, 15px);
+  line-height:1.15;
+}
+@media(max-width:650px) {
+  .grid > section:nth-child(2) > .card:first-child .court > .actions > button {
+    padding:10px 4px;
+    font-size:11px;
+  }
+}
+</style>
+
+<style id="picklepwr-court-design-refresh">
+/* PicklePWR palette court design inspired by the reference screenshot */
+.grid > section:nth-child(2) > .card:first-child .court {
+  padding:0 !important; overflow:hidden !important; border:1px solid var(--line) !important;
+  border-radius:14px !important; background:#fff !important;
+}
+.grid > section:nth-child(2) > .card:first-child .courthead {
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  min-height:48px; margin:0 !important; padding:12px 16px !important;
+  background:var(--dark) !important; color:#fff !important;
+}
+.grid > section:nth-child(2) > .card:first-child .courthead .lockedtag {
+  background:#dcefe9 !important; color:var(--dark) !important; border-radius:20px;
+}
+.court-matchup {
+  display:grid; grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);
+  align-items:stretch; gap:0; background:#fff; min-width:0;
+}
+.grid > section:nth-child(2) > .card:first-child .court .team {
+  margin:0 !important; border-radius:0 !important; padding:14px 12px !important;
+  min-width:0; min-height:120px; background:#edf6f3 !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court .team-two { background:#f4f8f6 !important; }
+.grid > section:nth-child(2) > .card:first-child .court .teamlabel {
+  color:#456760 !important; font-size:11px; margin-bottom:9px;
+}
+.team-player-list { display:flex; flex-direction:column; gap:12px; min-width:0; }
+.team-player-list .clickable-player-name {
+  display:block; min-width:0; max-width:100%; white-space:normal !important;
+  overflow-wrap:anywhere; font-size:15px; line-height:1.25; font-weight:750;
+}
+.grid > section:nth-child(2) > .card:first-child .court .vs {
+  display:flex; align-items:center; justify-content:center; margin:0 !important;
+  padding:0 2px; background:#fff; color:var(--muted); font-weight:800; font-size:12px;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions {
+  margin:0 !important; padding:10px 12px 12px; background:#fff;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:8px !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button {
+  min-height:44px; width:100%; min-width:0; padding:10px 8px;
+  border-radius:10px; font-size:clamp(11px,.9vw,14px); line-height:1.15;
+  white-space:normal; overflow-wrap:anywhere;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button:first-child {
+  background:var(--accent) !important; color:#fff !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button:last-child {
+  background:var(--dark) !important; color:#fff !important;
+}
+@media(max-width:650px) {
+  .grid > section:nth-child(2) > .card:first-child .court .team { padding:12px 9px !important; }
+  .team-player-list .clickable-player-name { font-size:13px; }
+  .grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button { font-size:11px; }
+}
+</style>
+<style id="picklepwr-translucent-team-backgrounds">
+/* Give each team panel a subtle translucent tint matching its Win button. */
+.grid > section:nth-child(2) > .card:first-child .court .team-one {
+  background: rgba(84, 183, 163, 0.16) !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court .team-two {
+  background: rgba(18, 48, 44, 0.09) !important;
+}
+</style>
+
+<style id="picklepwr-court-grid-3x3-final">
+/* Keep Live Courts in a predictable 3-column grid: Courts 1–3, then 4–6, then 7–9. */
+.grid > section:nth-child(2) > .card:first-child .courts {
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  width:100% !important; max-width:100% !important; min-width:0 !important;
+  gap:14px !important; box-sizing:border-box !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court { min-width:0 !important; max-width:100% !important; }
+.grid > section:nth-child(2) > .card:first-child .teamnames { white-space:normal !important; overflow-wrap:anywhere; }
+@media (max-width:900px) {
+  .grid > section:nth-child(2) > .card:first-child .courts { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+@media (max-width:600px) {
+  .grid > section:nth-child(2) > .card:first-child .courts { grid-template-columns:1fr !important; }
+}
+</style>
+
+
+<style id="picklepwr-win-buttons-align-with-team-boxes">
+/* Align each win button directly beneath its matching team panel, with the VS gap centered. */
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) !important;
+  gap:0 !important;
+  padding:10px 10px 12px !important;
+  box-sizing:border-box !important;
+  width:100% !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button:first-child {
+  grid-column:1 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+.grid > section:nth-child(2) > .card:first-child .court > .court-win-actions > button:last-child {
+  grid-column:3 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+@media(max-width:650px) {
+  .grid > section:nth-child(2) > .card:first-child .court > .court-win-actions {
+    grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr) !important;
+    padding-left:8px !important; padding-right:8px !important;
+  }
+}
+</style>
+
+
+<style id="picklepwr-centered-court-win-buttons">
+/* Center each win button inside its matching team half, with equal side spacing. */
+.court > .actions[style*="grid-template-columns:1fr 1fr"] {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+  justify-items: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.court > .actions[style*="grid-template-columns:1fr 1fr"] > button {
+  width: calc(100% - 12px) !important;
+  min-width: 0 !important;
+  justify-self: center !important;
+  text-align: center !important;
+}
+@media (max-width: 420px) {
+  .court > .actions[style*="grid-template-columns:1fr 1fr"] > button {
+    width: calc(100% - 4px) !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+}
+</style>
+
+<style id="picklepwr-completed-games-readable-fonts">
+/* Make the full-width Completed Games section easier to read and better use its space. */
+.completed-games-card h3 { font-size: clamp(19px, 1.35vw, 24px) !important; line-height: 1.3 !important; }
+.completed-games-card > .notice { font-size: 14px !important; line-height: 1.5 !important; padding: 12px 14px !important; }
+.completed-games-card .completed-game-row { padding: 15px 0 !important; gap: 14px !important; }
+.completed-games-card .completed-game-row > div:first-child { min-width: 280px !important; font-size: 15px !important; line-height: 1.45 !important; }
+.completed-games-card .completed-game-row > div:first-child > div { font-size: 14px !important; line-height: 1.45 !important; margin-top: 5px !important; }
+.completed-games-card .completed-game-row button { font-size: 14px !important; padding: 11px 15px !important; }
+@media(max-width:650px) {
+  .completed-games-card .completed-game-row > div:first-child { min-width: 100% !important; }
+  .completed-games-card .completed-game-row > div:last-child { width:100%; }
+  .completed-games-card .completed-game-row button { flex:1; }
+}
+</style>
+<style id="completed-game-player-editor-style">
+#completedGameHistory .completed-games-list select{box-sizing:border-box;min-width:0;padding:8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:inherit}
+@media(max-width:760px){#completedGameHistory [id^="completed-player-editor-"] > div{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:480px){#completedGameHistory [id^="completed-player-editor-"] > div{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<header><h1>⚡ PICKLEPWR OPEN PLAY</h1><small>Independent courts • win-button games • immediate next-player assignment • fair game distribution</small></header>
+<main>
+<div class="grid">
+<section>
+<div class="card">
+<h2>Tournament Control</h2>
+<div class="controls">
+<div><label>Available courts</label><select id="courtCount"></select></div>
+<div><label>Start time</label><input id="startTime" type="time" value="14:00"></div>
+<div><label>End time</label><input id="endTime" type="time" value="17:00"></div>
+
+<div><label>Event name</label><input type="text" id="eventName" value="PICKLEPWR OPEN PLAY"></div>
+<div><label>Event date</label><input type="date" id="eventDate"></div>
+</div>
+<div class="actions">
+<button onclick="generate()">▶ Start / Fill Available Courts</button>
+<button class="secondary" onclick="addPlayer()">+ Player</button>
+<button class="danger" onclick="resetAll()">Reset</button>
+</div>
+<div class="notice" style="margin-top:12px"><b>Open Play scheduling:</b> There are no rounds and no fixed game duration. Each court runs independently. When a court finishes, tap the winning team button and it immediately receives the next available balanced matchup.</div><div class="notice" style="margin-top:12px"><b>Pairing rule:</b> The scheduler avoids repeat partners whenever a valid alternative exists, minimizes repeat opponents, and balances completed games across available players.</div>
+
+<div id="scheduleDownloadArea" style="display:none;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f0f7f5">
+  <b>✅ Schedule Excel file is ready:</b>
+  <a id="scheduleDownloadLink" href="#" download style="display:inline-block;margin-left:8px;background:var(--accent);color:white;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:700">Download Schedule Excel</a>
+</div>
+</div>
+
+<div class="card" style="margin-top:16px">
+<h3>Players</h3>
+<div class="notice"><b>Player Level:</b> Choose Pickle or PWR for every player. Current court games are never changed when a level is edited; the new level applies to their next available game.</div><div class="notice">Tick YES/NO for the roster. Select each player’s level. You can change Pickle / PWR at any time. To stop a player who is currently playing, use <b>Stop After Current Game</b>.</div>
+<div class="bulk-player-box" style="margin:10px 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f6fbf9">
+  <label for="bulkPlayerNames" style="display:block;font-weight:800;margin-bottom:6px">📋 Add players in bulk</label>
+  <textarea id="bulkPlayerNames" rows="4" placeholder="Enter one player name per line, for example:
+Ron
+Cha
+Tinay
+Paul" style="width:100%;box-sizing:border-box;resize:vertical;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit"></textarea>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px">
+    <button type="button" onclick="importBulkPlayers()">＋ Add Names to Roster</button>
+    <span class="muted" style="font-size:12px">One name per line. Existing games and player records are kept.</span>
+  </div>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:10px">
+  <input type="text" id="playerSearch" placeholder="🔎 Search player name..." oninput="renderPlayers()">
+  <button class="secondary" onclick="clearPlayerSearch()">Clear</button>
+</div>
+<div class="player-header"><span>ON</span><span>PLAYER NAME</span><span>LOCKED PARTNER</span><span>LEVEL</span><span>ACTION</span></div>
+<div class="playerlist" id="players"></div>
+</div>
+</section>
+
+<section>
+<div class="card live-courts-card">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2>Live Courts</h2><div id="roundInfo" class="muted"></div>
+</div>
+<div class="statrow" id="liveCounters">
+  <div class="stat"><b id="activeCount">0</b><span>Active Players</span></div>
+  <div class="stat"><b id="notPlayingCount">0</b><span>Not Playing / Waiting</span></div>
+  <div class="stat"><b id="courtsUsedCount">0</b><span>Courts in Use</span></div>
+  <div class="stat"><b id="gamesLockedCount">0</b><span>Games Completed</span></div>
+  <div class="stat"><b id="beginnerActiveCount">0</b><span>Pickle Active</span></div>
+  <div class="stat"><b id="intermediateActiveCount">0</b><span>PWR Active</span></div>
+</div>
+<div id="roundView"></div>
+</div>
+
+<div class="card live-leaderboard-card" style="margin-top:16px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2>🏆 Live Wins Leaderboard</h2>
+<button class="secondary" type="button" onclick="showLeaderboardQR()">📱 Leaderboard QR</button>
+</div>
+<div class="notice">Live standings update automatically when a winning team is selected. Pickle and PWR rankings are completely separate.<div class="cloud-sync-status" style="margin-top:6px;font-size:11px;font-weight:800">☁️ Cloud sync initializing…</div></div>
+<div id="nextInLineSection" class="next-in-line-section">
+  <div class="next-line-header">
+    <div>
+      <h3>⏭️ Next in Line</h3>
+      <div class="muted">Active players waiting for their next game</div>
+    </div>
+    <span id="nextInLineCount" class="queue-count">0 waiting</span>
+  </div>
+  <div id="nextInLineList" class="next-in-line-list"></div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;width:100%;box-sizing:border-box;">
+  <div>
+    <h3>🟢 Pickle</h3>
+    <div class="tablewrap"><table class="stats"><thead><tr><th>Rank</th><th>Player</th><th>Games</th><th>Wins</th><th>Losses</th><th>Win %</th></tr></thead><tbody id="beginnerStats"></tbody></table></div>
+  </div>
+  <div>
+    <h3>🔵 PWR</h3>
+    <div class="tablewrap"><table class="stats"><thead><tr><th>Rank</th><th>Player</th><th>Games</th><th>Wins</th><th>Losses</th><th>Win %</th></tr></thead><tbody id="intermediateStats"></tbody></table></div>
+  </div>
+</div>
+</div>
+<div class="card completed-games-card" style="margin-top:16px">
+  <h3>🛠️ Completed Games — Correct Winner</h3>
+  <div class="notice">If you accidentally recorded the wrong winner, choose the correct winner below. The leaderboard will recalculate and sync automatically.</div>
+  <div id="completedGameHistory"></div>
+</div>
+</section>
+</div>
+</main>
+<script>
+const MAX=70, MAX_COURTS=9;
+const namesDefault=[];
+// Fresh sessions and Reset start with a clean, empty roster. Names are added manually or in bulk.
+const blankPlayers=Array.from({length:MAX},(_,i)=>({id:i+1,name:"",active:false,level:"Pickle",leaveFromRound:null,lockedPartnerId:null,stopAfterGame:false,resting:false}));
+let state=JSON.parse(localStorage.getItem("picklepwr_open_play_live")||"null")||{schema:2,players:blankPlayers,courts:7,currentGames:[],completedGames:[],startTime:"14:00",endTime:"17:00",eventName:"PICKLEPWR OPEN PLAY",eventDate:""};
+if(state.schema!==2){
+ const oldCompleted=[];
+ (state.roundsData||[]).forEach(rd=>(rd.games||[]).forEach(g=>{if(g.s1!==""&&g.s2!==""&&!(Number(g.s1)===0&&Number(g.s2)===0))oldCompleted.push({...g,completedAt:new Date().toISOString()})}));
+ state={schema:2,players:(state.players||blankPlayers),courts:Math.min(MAX_COURTS,Math.max(1,parseInt(state.courts)||7)),currentGames:[],completedGames:oldCompleted,startTime:state.startTime||"14:00",endTime:state.endTime||"17:00",eventName:state.eventName||"PICKLEPWR OPEN PLAY",eventDate:state.eventDate||""};
+}
+state.courts=Math.min(MAX_COURTS,Math.max(1,parseInt(state.courts)||7));
+state.players=state.players||blankPlayers;
+if(state.players.length<MAX){for(let i=state.players.length;i<MAX;i++)state.players.push({id:i+1,name:`Player ${i+1}`,active:false,level:"Pickle",leaveFromRound:null,lockedPartnerId:null,stopAfterGame:false});}
+state.players=state.players.slice(0,MAX); state.players.forEach((p,i)=>{p.id=i+1;if(!p.level)p.level="Pickle";if(p.lockedPartnerId===undefined)p.lockedPartnerId=null;if(p.stopAfterGame===undefined)p.stopAfterGame=false;if(p.resting===undefined)p.resting=false;});
+state.currentGames=Array.isArray(state.currentGames)?state.currentGames:[]; state.completedGames=Array.isArray(state.completedGames)?state.completedGames:[]; state.pendingNextCourts=Array.isArray(state.pendingNextCourts)?state.pendingNextCourts.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=MAX_COURTS):[];
+/* ===== PICKLEPWR PUBLIC LIVE LEADERBOARD / SUPABASE SYNC v4 - CLOUD FIRST ===== */
+const PICKLEPWR_CLOUD={url:"https://vencqzldsuyzxscblrxa.supabase.co",anonKey:"sb_publishable_1y4-qLVk-8RkuYMTnC0KdQ_4Q-cEL26"};
+let cloudTimer=null;
+let cloudPublishing=false;
+let cloudPublishPending=false;
+const PICKLEPWR_PUBLIC_EVENT_ID="picklepwr-live-main";
+function cloudConfigured(){return !!(PICKLEPWR_CLOUD.url&&PICKLEPWR_CLOUD.anonKey)}
+let ppAuthSession=null;
+function cloudPublicHeaders(){return {"apikey":PICKLEPWR_CLOUD.anonKey,"Authorization":"Bearer "+PICKLEPWR_CLOUD.anonKey,"Content-Type":"application/json"}}
+function cloudHeaders(){
+  const token=ppAuthSession?.access_token||PICKLEPWR_CLOUD.anonKey;
+  return {"apikey":PICKLEPWR_CLOUD.anonKey,"Authorization":"Bearer "+token,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"}
+}
+function controllerAuthenticated(){return !!ppAuthSession?.access_token}
+
+function ensureEventId(){
+  // One permanent public event ID keeps the QR code valid across resets/new sessions.
+  // Existing QR links may still contain an old ?event=... value, but publicEventId()
+  // intentionally ignores it and always reads the permanent live leaderboard.
+  state.eventId=PICKLEPWR_PUBLIC_EVENT_ID;
+  localStorage.setItem("picklepwr_event_id",PICKLEPWR_PUBLIC_EVENT_ID);
+  try{localStorage.setItem("picklepwr_open_play_live",JSON.stringify(state));}catch(e){}
+  return state.eventId;
+}
+ensureEventId();
+function publicEventId(){return PICKLEPWR_PUBLIC_EVENT_ID}
+const PICKLEPWR_IS_PUBLIC_VIEW=new URLSearchParams(location.search).get("leaderboard")==="1";
+// Public QR mode must never display the phone's stale localStorage leaderboard first.
+// The public screen is cloud-first: it renders only after Supabase returns the live row.
+if(PICKLEPWR_IS_PUBLIC_VIEW){
+  state.players=[];
+  state.completedGames=[];
+  state.currentGames=[];
+}
+function setCloudSyncStatus(text,ok){
+  document.querySelectorAll(".cloud-sync-status").forEach(el=>{
+    el.textContent=text;
+    el.style.color=ok===true?"#247a63":(ok===false?"#a52b2b":"#765b12");
+  });
+}
+async function publishPublicLeaderboardNow(force=false){
+  if(!cloudConfigured()||new URLSearchParams(location.search).get("leaderboard")==="1")return false;
+  if(!controllerAuthenticated())return false;
+  if(cloudPublishing&&!force)return false;
+  cloudPublishing=true;
+  try{
+    if(ppAuthSession?.expires_at && ppAuthSession.expires_at<=Date.now()+30000){
+      if(!(await refreshControllerSession()))throw new Error("Controller session expired. Please log in again.");
+    }
+    const base=PICKLEPWR_CLOUD.url.replace(/\/$/,"")+"/rest/v1/picklepwr_live";
+    const id=encodeURIComponent(PICKLEPWR_PUBLIC_EVENT_ID);
+    const payload={event_id:PICKLEPWR_PUBLIC_EVENT_ID,event_name:state.eventName||"PICKLEPWR OPEN PLAY",event_date:state.eventDate||"",leaderboard:{players:state.players||[],completedGames:state.completedGames||[],currentGames:state.currentGames||[],pendingNextCourts:state.pendingNextCourts||[],eventName:state.eventName||"PICKLEPWR OPEN PLAY",eventDate:state.eventDate||"",eventId:PICKLEPWR_PUBLIC_EVENT_ID},updated_at:new Date().toISOString()};
+    // First UPDATE the permanent row and ask PostgREST to return what it changed.
+    // A successful PATCH can otherwise return 204 even when zero rows matched.
+    const patchHeaders={...cloudHeaders(),"Prefer":"return=representation"};
+    const patch=await fetch(base+"?event_id=eq."+id,{method:"PATCH",headers:patchHeaders,body:JSON.stringify(payload)});
+    if(!patch.ok){const msg=await patch.text().catch(()=>"");throw new Error("Supabase update HTTP "+patch.status+(msg?" — "+msg.slice(0,300):""));}
+    const patched=await patch.json().catch(()=>[]);
+    if(!Array.isArray(patched)||patched.length===0){
+      throw new Error("Supabase update returned no matching PicklePWR event row");
+    }
+    setCloudSyncStatus("☁️ Synced",true);
+    return true;
+  }catch(e){
+    console.warn("PicklePWR cloud sync failed",e);
+    setCloudSyncStatus("⚠️ Cloud sync failed: "+(e.message||"Unknown error"),false);
+    return false
+  }finally{
+    cloudPublishing=false;
+    if(cloudPublishPending){cloudPublishPending=false;publishPublicLeaderboardNow(true);}
+  }
+}
+function publishPublicLeaderboard(){
+  if(!cloudConfigured()||new URLSearchParams(location.search).get("leaderboard")==="1")return;
+  if(cloudPublishing){cloudPublishPending=true;return;}
+  clearTimeout(cloudTimer);
+  cloudTimer=setTimeout(()=>publishPublicLeaderboardNow(),250);
+}
+let publicLastUpdatedAt="";
+let publicLeaderboardRequestId=0;
+async function loadPublicLeaderboard(){
+  if(!cloudConfigured())return false;
+  const requestId=++publicLeaderboardRequestId;
+  try{
+    setCloudSyncStatus("☁️ Connecting…",null);
+    const base=PICKLEPWR_CLOUD.url.replace(/\/$/,"");
+    const url=base+"/rest/v1/picklepwr_live?event_id=eq."+encodeURIComponent(PICKLEPWR_PUBLIC_EVENT_ID)+"&select=event_id,leaderboard,updated_at,event_name,event_date&limit=1";
+    const r=await fetch(url,{headers:{...cloudPublicHeaders(),"Cache-Control":"no-cache, no-store","Pragma":"no-cache"},cache:"no-store"});
+    if(!r.ok){const msg=await r.text().catch(()=>"");throw new Error("Supabase read HTTP "+r.status+(msg?" — "+msg.slice(0,240):""));}
+    const rows=await r.json();
+    if(requestId!==publicLeaderboardRequestId)return false;
+    const row=rows[0];
+    if(!row){setCloudSyncStatus("⏳ Waiting for controller sync",null);return false;}
+    const d=row.leaderboard||{};
+    if(!Array.isArray(d.players)||!Array.isArray(d.completedGames)||!Array.isArray(d.currentGames)){console.warn("PicklePWR public leaderboard row is incomplete",row);return false;}
+    const incoming=Date.parse(row.updated_at||"");
+    const current=Date.parse(publicLastUpdatedAt||"");
+    if(publicLastUpdatedAt&&Number.isFinite(incoming)&&Number.isFinite(current)&&incoming<current){console.warn("Ignored stale public leaderboard response",row.updated_at,publicLastUpdatedAt);return false;}
+    state.players=d.players;state.completedGames=d.completedGames;state.currentGames=d.currentGames;state.pendingNextCourts=Array.isArray(d.pendingNextCourts)?d.pendingNextCourts.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=MAX_COURTS):[];
+    state.eventName=d.eventName||row.event_name||state.eventName;state.eventDate=d.eventDate||row.event_date||state.eventDate;
+    publicLastUpdatedAt=row.updated_at||publicLastUpdatedAt;
+    setCloudSyncStatus("🟢 Live • updated "+new Date(row.updated_at||Date.now()).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"}),true);
+    return true;
+  }catch(e){console.warn("PicklePWR public leaderboard load failed",e);setCloudSyncStatus("⚠️ Unable to load live data",false);return false}
+}
+let publicLeaderboardLoopRunning=false;
+async function publicLeaderboardLoop(){
+  if(!PICKLEPWR_IS_PUBLIC_VIEW)return;
+  const loaded=await loadPublicLeaderboard();
+  if(loaded){renderStats();renderNextInLine();renderCounters();}
+  setTimeout(publicLeaderboardLoop,2000);
+}
+function startPublicLeaderboardLoop(){
+  if(publicLeaderboardLoopRunning)return;
+  if(new URLSearchParams(location.search).get("leaderboard")!=="1")return;
+  publicLeaderboardLoopRunning=true;
+  publicLeaderboardLoop();
+}
+function save(){localStorage.setItem("picklepwr_open_play_live",JSON.stringify(state));publishPublicLeaderboard()}
+function setup(){
+ const cc=document.getElementById("courtCount");cc.innerHTML=Array.from({length:MAX_COURTS},(_,i)=>`<option>${i+1}</option>`).join("");cc.value=state.courts;
+ document.getElementById("eventName").value=state.eventName||"PICKLEPWR OPEN PLAY";document.getElementById("eventDate").value=state.eventDate||"";document.getElementById("startTime").value=state.startTime||"14:00";document.getElementById("endTime").value=state.endTime||"17:00";
+ document.getElementById("eventName").onchange=e=>{state.eventName=e.target.value;save()};document.getElementById("eventDate").onchange=e=>{state.eventDate=e.target.value;save()};
+ ["startTime","endTime"].forEach(id=>document.getElementById(id).onchange=()=>{state.startTime=document.getElementById("startTime").value;state.endTime=document.getElementById("endTime").value;save();render()});
+ cc.onchange=()=>{state.courts=Math.min(MAX_COURTS,Math.max(1,+cc.value));save();fillEmptyCourts();render()};
+ render();
+}
+function render(){renderPlayers();renderRounds();renderCompletedGameHistory();renderStats();renderNextInLine();renderCounters()}
+function partnerOptions(p){
+ const eligible=state.players.filter(x=>x.id!==p.id&&x.active&&(x.level||"Pickle")===(p.level||"Pickle"));
+ const partner=state.players.find(x=>x.id===p.lockedPartnerId);
+ const partnerName=partner&&partner.active?esc(partner.name):"No lock";
+ return `<div class="partner-lock-wrap"><select class="partner-select partner-lock-select" title="Locked partner" aria-label="Locked partner" onchange="setLockedPartner(${p.id},this.value)"><option value="">🔒</option>${eligible.map(x=>`<option value="${x.id}" ${p.lockedPartnerId==x.id?"selected":""}>🔒 ${esc(x.name)}</option>`).join("")}</select><span class="partner-lock-name">${partnerName}</span></div>`;
+}
+function renderPlayers(){
+ const q=(document.getElementById("playerSearch")?.value||"").trim().toLowerCase();const list=state.players.filter(p=>!q||p.name.toLowerCase().includes(q));
+ document.getElementById("players").innerHTML=list.map(p=>{
+  const status=!p.active?"Inactive":(p.resting?(p.stopAfterGame?"Resting • will stop after current game":"Resting"):"Playing / waiting");
+  const action=(p.active&&p.resting)?`<button class="secondary leavebtn" onclick="cancelStop(${p.id})">↩ Keep Playing</button>`:`<button class="secondary leavebtn" onclick="stopAfterCurrentGame(${p.id})">⏹ Rest / Stop</button>`;
+  const level=p.level==="PWR"?"PWR":"Pickle";
+  return `<div class="player"><input type="checkbox" ${p.active?"checked":""} onchange="togglePlayer(${p.id},this.checked)"><div class="fieldwrap"><input class="name-input" type="text" value="${esc(p.name)}" oninput="rename(${p.id},this.value)"><small class="status">${status}</small></div><div class="partner-lock-cell">${p.active?partnerOptions(p):"<span class=\"partner-lock-name\">No lock</span>"}</div><select class="level-select" onchange="setLevel(${p.id},this.value)"><option ${level==="Pickle"?"selected":""}>Pickle</option><option ${level==="PWR"?"selected":""}>PWR</option></select>${action}</div>`;
+ }).join("")||`<div class="empty">No players found.</div>`;
+}
+function reconcileCurrentGames(){
+ const removedCourts=new Set();
+ state.currentGames=(state.currentGames||[]).filter(g=>{
+  if(!g)return false;
+  const ids=[...(g.t1||[]),...(g.t2||[])];
+  const players=ids.map(id=>state.players.find(p=>p.id===id));
+  const valid=players.length===4 && players.every(p=>p&&p.active) && players.every(p=>(p.level||"Pickle")===g.level);
+  if(!valid)removedCourts.add(g.court);
+  return valid;
+ });
+ return removedCourts;
+}
+function refreshLiveAfterRosterChange(){
+ reconcileCurrentGames();
+ fillEmptyCourts(false);
+ save();
+ render();
+}
+function togglePlayer(id,on){const p=state.players.find(p=>p.id===id);if(!p)return;p.active=on;p.stopAfterGame=false;p.resting=false;refreshLiveAfterRosterChange()}
+function stopAfterCurrentGame(id){
+ const p=state.players.find(p=>p.id===id);
+ if(!p||!p.active)return;
+ p.resting=true;
+ p.stopAfterGame=false;
+ // Rest is immediate, even if the player is currently on court. Replace them
+ // with any eligible waiting player of the same level, then continue the court.
+ const g=(state.currentGames||[]).find(x=>x&&[...(x.t1||[]),...(x.t2||[])].includes(id));
+ if(g){
+   const replacements=changeablePlayers(g).filter(x=>x.id!==id);
+   if(replacements.length){
+     const newPlayer=replacements[0];
+     const replace=arr=>arr.map(pid=>pid===id?newPlayer.id:pid);
+     g.t1=replace(g.t1);
+     g.t2=replace(g.t2);
+     g.s1="";g.s2="";
+     g.playerChangedAt=new Date().toISOString();
+   }else{
+     const idx=state.currentGames.indexOf(g);
+     if(idx>=0)state.currentGames.splice(idx,1);
+   }
+ }
+ save();
+ fillEmptyCourts(false);
+ render();
+}
+function cancelStop(id){const p=state.players.find(p=>p.id===id);if(!p)return;p.active=true;p.resting=false;p.stopAfterGame=false;refreshLiveAfterRosterChange()}
+function setLockedPartner(id,value){const p=state.players.find(x=>x.id===id);if(!p)return;const pid=parseInt(value)||null;if(pid===id)return;if(pid){const q=state.players.find(x=>x.id===pid);if(!q||q.level!==p.level)return alert("Locked partners must be in the same level.");p.lockedPartnerId=pid;q.lockedPartnerId=id;}else{const old=state.players.find(x=>x.id===p.lockedPartnerId);if(old&&old.lockedPartnerId===id)old.lockedPartnerId=null;p.lockedPartnerId=null;}save();fillEmptyCourts();render()}
+function setLevel(id,level){
+ const p=state.players.find(p=>p.id===id);if(!p)return;
+ p.level=level==="PWR"?"PWR":"Pickle";
+ // A player can never remain in a live game from the old level. Reconcile the affected court immediately.
+ const partner=state.players.find(x=>x.id===p.lockedPartnerId);
+ if(partner&&partner.level!==p.level){if(partner.lockedPartnerId===p.id)partner.lockedPartnerId=null;p.lockedPartnerId=null;}
+ refreshLiveAfterRosterChange();
+}
+function rename(id,n){
+ const p=state.players.find(p=>p.id===id);
+ if(!p)return;
+ p.name=n;
+ save();
+ renderStats();
+ renderRoundsOnly();
+}
+function importBulkPlayers(){
+ const box=document.getElementById("bulkPlayerNames");
+ const names=[...new Set((box?.value||"").split(/\r?\n/).map(n=>n.trim()).filter(Boolean))];
+ if(!names.length)return alert("Paste one or more player names first.");
+ const already=new Set(state.players.filter(p=>p.active).map(p=>(p.name||"").trim().toLowerCase()));
+ const gamesUsed=new Set();
+ (state.completedGames||[]).forEach(g=>[...(g.t1||[]),...(g.t2||[])].forEach(id=>gamesUsed.add(id)));
+ currentIds().forEach(id=>gamesUsed.add(id));
+ const slots=state.players.filter(p=>!p.active&&!gamesUsed.has(p.id)&&(!(p.name||"").trim()||/^Player\s+\d+$/i.test((p.name||"").trim())));
+ let added=0, skipped=0;
+ for(const name of names){
+  if(already.has(name.toLowerCase())){skipped++;continue;}
+  const p=slots.shift();
+  if(!p)break;
+  p.name=name;p.active=true;p.resting=false;p.stopAfterGame=false;p.leaveFromRound=null;p.lockedPartnerId=null;p.level=p.level||"Pickle";
+  already.add(name.toLowerCase());added++;
+ }
+ if(!added){alert(slots.length===0?"No unused player slots are available. Existing player records were preserved.":"No new names were added. They may already be active.");return;}
+ box.value="";save();fillEmptyCourts(false);render();
+ const remaining=names.length-added-skipped;
+ alert(`Added ${added} player${added===1?"":"s"}.${skipped?` Skipped ${skipped} name(s) already active.`:""}${remaining>0?` ${remaining} name(s) could not be added because no unused slots remain.`:""}`);
+}
+function addPlayer(){const p=state.players.find(p=>!p.active);if(!p)return alert("Maximum 70 players.");p.active=true;p.stopAfterGame=false;p.resting=false;p.level=p.level||"Pickle";save();fillEmptyCourts();render()}
+function isPlayerOnCourt(id){return state.currentGames.some(g=>g&&[...g.t1,...g.t2].includes(id))}
+function currentIds(){return new Set(state.currentGames.flatMap(g=>g?[...g.t1,...g.t2]:[]))}
+function historyFor(){const h={};state.players.forEach(p=>h[p.id]={games:0,partners:{},opponents:{}});state.completedGames.forEach(g=>accumulate(h,g));return h}
+function accumulate(h,g){const ids=[...g.t1,...g.t2];ids.forEach(id=>{if(h[id])h[id].games++});for(const a of g.t1)for(const b of g.t1)if(a!==b&&h[a])h[a].partners[b]=(h[a].partners[b]||0)+1;for(const a of g.t2)for(const b of g.t2)if(a!==b&&h[a])h[a].partners[b]=(h[a].partners[b]||0)+1;for(const a of g.t1)for(const b of g.t2){if(h[a])h[a].opponents[b]=(h[a].opponents[b]||0)+1;if(h[b])h[b].opponents[a]=(h[b].opponents[a]||0)+1}}
+function choosePlayers(level,h){
+ const busy=currentIds();
+ let pool=state.players.filter(p=>p.active&&!p.resting&&!p.stopAfterGame&&!busy.has(p.id)&&(p.level||"Pickle")===level);
+ if(pool.length<4)return null;
+
+ // FAIRNESS RULE: completed games are the first priority.
+ // Nobody with fewer games should be skipped in favor of someone with more games
+ // unless a locked-partner requirement makes that impossible.
+ const gameCount=p=>h[p.id]?.games||0;
+ const lockedPartner=p=>{
+   if(!p.lockedPartnerId)return null;
+   const q=state.players.find(x=>x.id===p.lockedPartnerId);
+   if(q&&q.active&&!q.resting&&!q.stopAfterGame&&!busy.has(q.id)&&(q.level||"Pickle")===level)return q;
+   return null;
+ };
+
+ // Build available units: a locked pair is one unit; everyone else is a single.
+ const units=[]; const used=new Set();
+ const sorted=pool.slice().sort((a,b)=>gameCount(a)-gameCount(b)||a.id-b.id);
+ for(const p of sorted){
+   if(used.has(p.id))continue;
+   const q=lockedPartner(p);
+   if(q){
+     used.add(p.id); used.add(q.id);
+     units.push({players:[p,q],games:Math.max(gameCount(p),gameCount(q)),minGames:Math.min(gameCount(p),gameCount(q))});
+   }else{
+     used.add(p.id);
+     units.push({players:[p],games:gameCount(p),minGames:gameCount(p)});
+   }
+ }
+
+ // Always start from the lowest-game units. This prevents 0-game players from
+ // being passed over while players with 2–3 games are selected.
+ units.sort((a,b)=>a.games-b.games||a.minGames-b.minGames||a.players[0].id-b.players[0].id);
+ const eligibleUnits=units.filter(u=>u.players.length===1||u.players.length===2);
+ if(eligibleUnits.reduce((n,u)=>n+u.players.length,0)<4)return null;
+
+ // Evaluate several combinations from the lowest-game portion of the queue.
+ // Partner repetition is heavily penalized, but never overrides the basic
+ // lowest-games fairness rule when a valid four-player group exists.
+ let best=null,bestCost=Infinity;
+ const maxUnits=Math.min(16,eligibleUnits.length);
+ const candidates=eligibleUnits.slice(0,maxUnits);
+
+ function evaluate(group){
+   if(group.length!==4)return null;
+   let partnerRepeat=0,oppRepeat=0,totalGames=0,maxGames=0,minGames=Infinity;
+   for(const p of group){
+     const g=gameCount(p); totalGames+=g; maxGames=Math.max(maxGames,g); minGames=Math.min(minGames,g);
+   }
+   for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){
+     partnerRepeat+=h[group[i].id]?.partners?.[group[j].id]||0;
+   }
+   const splits=[[[0,1],[2,3]],[[0,2],[1,3]],[[0,3],[1,2]]];
+   let bestSplit=null,bestSplitCost=Infinity;
+   for(const sp of splits){
+     const t1=sp[0].map(i=>group[i].id),t2=sp[1].map(i=>group[i].id);
+     let valid=true;
+     for(const team of [t1,t2]){
+       for(const id of team){
+         const p=state.players.find(x=>x.id===id);
+         if(p?.lockedPartnerId && !team.includes(p.lockedPartnerId))valid=false;
+       }
+     }
+     if(!valid)continue;
+     let cost=0;
+     for(const a of t1)for(const b of t2)cost+=(h[a]?.opponents?.[b]||0)*100;
+     if(cost<bestSplitCost){bestSplitCost=cost;bestSplit=[t1,t2];}
+   }
+   if(!bestSplit)return null;
+   return {t1:bestSplit[0],t2:bestSplit[1],partnerRepeat,oppRepeat,totalGames,maxGames,minGames,
+     // Game-count fairness is intentionally much more important than repeats.
+     cost:(maxGames-minGames)*1000 + partnerRepeat*100 + bestSplitCost + totalGames*0.01};
+ }
+
+ // Generate combinations of units. Four-player groups are small, so this is
+ // deterministic and avoids the previous random starvation behavior.
+ function walk(i,chosen,count){
+   if(count===4){
+     const group=chosen.flatMap(u=>u.players);
+     const result=evaluate(group);
+     if(result){
+       // Prefer the group with the lowest maximum game count, then lowest total,
+       // then fewer repeats. This is the core fair-queue rule.
+       const key=[result.maxGames,result.totalGames,result.partnerRepeat,result.oppRepeat];
+       const bestKey=best? [best.maxGames,best.totalGames,best.partnerRepeat,best.oppRepeat]:null;
+       if(!bestKey || key.some((v,k)=>v<bestKey[k] && key.slice(0,k).every((x,j)=>x===bestKey[j]))){best=result;best.cost=result.cost;}
+     }
+     return;
+   }
+   if(i>=candidates.length||count>4)return;
+   for(let j=i;j<candidates.length;j++){
+     const u=candidates[j];
+     if(count+u.players.length>4)continue;
+     walk(j+1,chosen.concat(u),count+u.players.length);
+   }
+ }
+ walk(0,[],0);
+ if(!best)return null;
+ return {t1:best.t1,t2:best.t2,level};
+}
+function levelQueueStats(level,h){
+ const busy=currentIds();
+ const eligible=state.players.filter(p=>p.active&&!p.resting&&!p.stopAfterGame&&!busy.has(p.id)&&(p.level||"Pickle")===level);
+ if(eligible.length<4)return null;
+ const projected={};state.players.forEach(p=>projected[p.id]=h[p.id]?.games||0);
+ // A live game counts as one projected game so a level already occupying courts
+ // does not immediately receive another court before its players have caught up.
+ state.currentGames.forEach(g=>{if(g&&g.level===level){[...g.t1,...g.t2].forEach(id=>{if(projected[id]!==undefined)projected[id]++;});}});
+ const avg=eligible.reduce((sum,p)=>sum+projected[p.id],0)/eligible.length;
+ const min=Math.min(...eligible.map(p=>projected[p.id]));
+ const max=Math.max(...eligible.map(p=>projected[p.id]));
+ const waiting=eligible.length;
+ return {eligible,avg,min,max,waiting,need:eligible.reduce((sum,p)=>sum+(max-projected[p.id]),0)};
+}
+function nextGameForCourt(court){
+ const h=historyFor();
+ const levels=["Pickle","PWR"].map(level=>{
+   const st=levelQueueStats(level,h);
+   if(!st)return null;
+   const ratio=st.waiting/Math.max(1,state.players.filter(p=>p.active&&!p.resting&&!p.stopAfterGame).length);
+   return {...st,level,ratio};
+ }).filter(Boolean);
+ if(!levels.length)return null;
+
+ // Fairness priority:
+ // 1) Give the court to the level with fewer projected games per player.
+ // 2) If nearly tied, favor the level with more people waiting (queue pressure).
+ // 3) If still tied, favor the level with the player furthest behind.
+ levels.sort((a,b)=>{
+   const avgDiff=a.avg-b.avg;
+   if(Math.abs(avgDiff)>0.08)return avgDiff;
+   const ratioDiff=b.ratio-a.ratio;
+   if(Math.abs(ratioDiff)>0.01)return ratioDiff;
+   return (b.min-a.min)||(a.max-b.max)||a.level.localeCompare(b.level);
+ });
+ const chosenLevel=levels[0].level;
+ const g=choosePlayers(chosenLevel,h);
+ if(!g)return null;
+ return {id:Date.now()+Math.random(),court,t1:g.t1,t2:g.t2,s1:"",s2:"",level:g.level,startedAt:new Date().toISOString()};
+}
+function fillEmptyCourts(shouldRender=true){
+ if(!Array.isArray(state.currentGames))state.currentGames=[];
+ if(!Array.isArray(state.pendingNextCourts))state.pendingNextCourts=[];
+ for(let court=1;court<=state.courts;court++){
+  if(state.currentGames.some(g=>g&&g.court===court))continue;
+  if(state.pendingNextCourts.includes(court))continue;
+  const g=nextGameForCourt(court);if(g)state.currentGames.push(g);
+ }
+ save();
+ if(shouldRender)render();
+}
+function startNextRound(court){
+ court=Number(court);
+ if(!Number.isInteger(court)||court<1||court>state.courts)return;
+ state.pendingNextCourts=(state.pendingNextCourts||[]).filter(n=>Number(n)!==court);
+ fillEmptyCourts(true);
+}
+function generate(){fillEmptyCourts()}
+function updateScore(court,side,value){const g=state.currentGames.find(x=>x&&x.court===court);if(!g)return;g[side]=value===""?"":Math.max(0,parseInt(value)||0);save();renderRoundsOnly()}
+function changeablePlayers(g){
+ const h=historyFor();
+ const busy=currentIds();
+ const current=new Set([...(g.t1||[]),...(g.t2||[])]);
+ const gameCount=p=>h[p.id]?.games||0;
+ // Show every eligible WAITING player of the same level.
+ // Locked-partner settings do not hide anyone from this manual replacement list.
+ return state.players
+   .filter(p=>p.active&&!p.resting&&!p.stopAfterGame&&!busy.has(p.id)&&!current.has(p.id)&&(p.level||"Pickle")===g.level)
+   .sort((a,b)=>gameCount(a)-gameCount(b)||a.id-b.id);
+}
+function changeCourtPlayer(court,oldId,newId){
+ const g=state.currentGames.find(x=>x&&x.court===court);if(!g)return;
+ const oldPlayer=state.players.find(p=>p.id===oldId);
+ const newPlayer=state.players.find(p=>p.id===Number(newId));
+ if(!oldPlayer||!newPlayer)return;
+ if(!newPlayer.active||newPlayer.resting||newPlayer.stopAfterGame)return alert("That player is not available.");
+ if((newPlayer.level||"Pickle")!==g.level)return alert("The replacement must be the same level.");
+ if(currentIds().has(newPlayer.id)&&newPlayer.id!==oldId)return alert("That player is already playing on another court.");
+ if(newPlayer.lockedPartnerId && ![...g.t1,...g.t2].includes(Number(newPlayer.lockedPartnerId)))return alert("That player has a locked partner and cannot be moved into this game without their partner.");
+ const replace=arr=>arr.map(id=>id===oldId?newPlayer.id:id);
+ g.t1=replace(g.t1);g.t2=replace(g.t2);
+ g.s1="";g.s2="";
+ g.playerChangedAt=new Date().toISOString();
+ save();render();
+}
+function openPlayerChanger(court,oldId){
+ const g=state.currentGames.find(x=>x&&x.court===court);if(!g)return;
+ const target=document.getElementById(`player-name-${court}-${oldId}`);if(!target)return;
+ const replacements=changeablePlayers(g);
+ const options=replacements.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("");
+ target.innerHTML=`<select class="inline-player-select" aria-label="Choose replacement player" onchange="if(this.value){changeCourtPlayer(${court},${oldId},this.value)}else{cancelPlayerChanger(${court},${oldId})}"><option value="">Select player…</option>${options}</select>`;
+ const sel=target.querySelector("select");
+ if(sel){
+   // Open the native picker directly in the original tap/click gesture.
+   // Deferring showPicker with setTimeout can lose user activation on mobile browsers,
+   // making subsequent taps appear to require a long press.
+   sel.focus({preventScroll:true});
+   try { if(typeof sel.showPicker === "function") sel.showPicker(); } catch(e) {}
+ }
+}
+function cancelPlayerChanger(court,oldId){
+ const target=document.getElementById(`player-name-${court}-${oldId}`);
+ if(!target)return;
+ const p=state.players.find(x=>x.id===oldId);
+ target.textContent=p?.name||(`Player ${oldId}`);
+}
+function finishGame(court,winnerTeam){const idx=state.currentGames.findIndex(x=>x&&x.court===court);if(idx<0)return;if(winnerTeam!==1&&winnerTeam!==2)return;const g=state.currentGames[idx];g.winnerTeam=winnerTeam;g.s1="";g.s2="";g.completedAt=new Date().toISOString();state.completedGames.push(g);state.currentGames.splice(idx,1);if(!Array.isArray(state.pendingNextCourts))state.pendingNextCourts=[];if(!state.pendingNextCourts.includes(Number(court)))state.pendingNextCourts.push(Number(court));save();render();}
+function changeCompletedWinner(index,winnerTeam){
+  const g=state.completedGames[index];
+  if(!g||(winnerTeam!==1&&winnerTeam!==2))return;
+  if(g.winnerTeam===winnerTeam)return;
+  const teamName=winnerTeam===1?names(g.t1):names(g.t2);
+  if(!confirm(`Change the recorded winner to ${teamName}? The live leaderboard will be recalculated.`))return;
+  g.winnerTeam=winnerTeam;
+  g.s1="";g.s2="";
+  g.winnerCorrectedAt=new Date().toISOString();
+  save();render();
+}
+function openCompletedGamePlayerEditor(index){
+  const g=state.completedGames[index];
+  const target=document.getElementById(`completed-player-editor-${index}`);
+  if(!g||!target)return;
+  if(target.dataset.open==='1'){target.innerHTML='';target.dataset.open='0';return;}
+  // Keep the correction scoped to the four players recorded in this game.
+  const gamePlayerIds=new Set([...(g.t1||[]),...(g.t2||[])].map(Number));
+  const gamePlayers=state.players.filter(p=>gamePlayerIds.has(Number(p.id)));
+  const playerOptions=(selected)=>gamePlayers.map(p=>`<option value="${p.id}" ${Number(p.id)===Number(selected)?'selected':''}>${esc(p.name||`Player ${p.id}`)}</option>`).join('');
+  const field=(label,slot,selected)=>`<label style="display:block;font-size:12px;font-weight:800;margin-bottom:5px">${label}<select id="completed-p-${index}-${slot}" onchange="swapCompletedGamePlayer(${index},'${slot}',this.value)" style="display:block;width:100%;margin-top:4px">${playerOptions(selected)}</select></label>`;
+  target.dataset.open='1';
+  target.innerHTML=`<div style="margin:4px 0 14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:#f7fbf9;display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;align-items:end">
+    <div style="grid-column:1/-1;font-size:12px;color:var(--muted)">Choose a player to swap them with their current position in this game. Changes are saved automatically.</div>
+    ${field('Team 1 · Player 1','t10',g.t1[0])}
+    ${field('Team 1 · Player 2','t11',g.t1[1])}
+    ${field('Team 2 · Player 1','t20',g.t2[0])}
+    ${field('Team 2 · Player 2','t21',g.t2[1])}
+    <div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="secondary" onclick="cancelCompletedGamePlayerEdit(${index})">Close</button></div>
+  </div>`;
+}
+function swapCompletedGamePlayer(index,slot,newPlayerId){
+  const g=state.completedGames[index];if(!g)return;
+  const slots={t10:{team:'t1',pos:0},t11:{team:'t1',pos:1},t20:{team:'t2',pos:0},t21:{team:'t2',pos:1}};
+  const chosen=slots[slot];if(!chosen)return;
+  const newId=Number(newPlayerId),oldId=Number(g[chosen.team][chosen.pos]);
+  if(!Number.isFinite(newId)||newId===oldId)return;
+  let other=null;
+  for(const [key,where] of Object.entries(slots)){
+    if(Number(g[where.team][where.pos])===newId){other=where;break;}
+  }
+  if(!other){alert('Choose one of the four players from this game.');render();return;}
+  // Swap the selected player with the player currently occupying this position.
+  g[chosen.team][chosen.pos]=newId;
+  g[other.team][other.pos]=oldId;
+  g.playersCorrectedAt=new Date().toISOString();
+  save();render();
+  // Re-open the editor after render so further swaps can be made easily.
+  openCompletedGamePlayerEditor(index);
+}
+function cancelCompletedGamePlayerEdit(index){const target=document.getElementById(`completed-player-editor-${index}`);if(target){target.innerHTML='';target.dataset.open='0';}}
+function renderCompletedGameHistory(){
+  const target=document.getElementById("completedGameHistory");if(!target)return;
+  if(!state.completedGames.length){target.innerHTML='<div class="empty">No completed games yet.</div>';return;}
+  const recent=state.completedGames.map((g,index)=>({...g,_index:index})).sort((a,b)=>String(b.completedAt||"").localeCompare(String(a.completedAt||""))).slice(0,30);
+  target.innerHTML='<div class="completed-games-list">'+recent.map(g=>{
+    const winner=g.winnerTeam===1?1:(g.winnerTeam===2?2:0);
+    const label=winner===1?`Team 1 won — ${names(g.t1)}`:winner===2?`Team 2 won — ${names(g.t2)}`:"Winner not recorded";
+    return `<div class="completed-game-row" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--border,#ddd)"><div style="flex:1;min-width:220px"><b>Court ${Number(g.court)||"—"}</b> · ${esc(g.level||"")}<div class="muted" style="font-size:12px;margin-top:3px">${esc(names(g.t1))} <b>vs</b> ${esc(names(g.t2))}</div><div style="font-size:12px;margin-top:3px">Recorded: <b>${esc(label)}</b></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="secondary" onclick="changeCompletedWinner(${g._index},1)" ${winner===1?'disabled':''}>Team 1 Wins</button><button class="secondary" onclick="changeCompletedWinner(${g._index},2)" ${winner===2?'disabled':''}>Team 2 Wins</button><button class="secondary" onclick="openCompletedGamePlayerEditor(${g._index})">Change Players</button></div></div><div id="completed-player-editor-${g._index}" data-open="0"></div>`;
+  }).join('')+'</div>';
+  if(state.completedGames.length>30)target.insertAdjacentHTML('beforeend','<div class="muted" style="font-size:12px;margin-top:8px">Showing the 30 most recent completed games.</div>');
+}
+function renderRounds(){renderRoundsOnly()}
+function renderRoundsOnly(){
+ const v=document.getElementById("roundView");document.getElementById("roundInfo").textContent=`Each court runs independently • ${state.startTime||""}–${state.endTime||""} • no fixed game length`;
+ const cards=Array.from({length:state.courts},(_,idx)=>{const no=idx+1,g=state.currentGames.find(x=>x&&x.court===no);if(!g){const pending=(state.pendingNextCourts||[]).includes(no);return `<div class="court unavailable ${pending?'next-round-pending':''}"><div class="courthead"><span>Court ${no}</span><span class="lockedtag">${pending?'GAME FINISHED':'WAITING'}</span></div>${pending?`<div class="empty" style="padding:16px 10px"><div><div style="font-weight:800;color:var(--ink);margin-bottom:10px">Winner recorded ✓</div><button type="button" onclick="startNextRound(${no})">▶ Start Next Round</button></div></div>`:`<div class="empty">Waiting for 4 available players.</div>`}</div>`;}
+ const playerName=(id)=>{const p=state.players.find(x=>x.id===id);return `<span id="player-name-${g.court}-${id}" class="clickable-player-name" title="Click to change player" onclick="openPlayerChanger(${g.court},${id})">${esc(p?.name||(`Player ${id}`))}</span>`};
+ return `<div class="court"><div class="courthead"><span>Court ${g.court}</span><span class="lockedtag">${g.level}</span><span class="lockedtag">🔴 LIVE</span></div><div class="court-matchup"><div class="team team-one"><div class="teamlabel">TEAM 1</div><div class="team-player-list">${playerName(g.t1[0])}${playerName(g.t1[1])}</div></div><div class="vs">VS</div><div class="team team-two"><div class="teamlabel">TEAM 2</div><div class="team-player-list">${playerName(g.t2[0])}${playerName(g.t2[1])}</div></div></div><div class="actions court-win-actions" style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px"><button onclick="finishGame(${g.court},1)">Team 1 Wins</button><button onclick="finishGame(${g.court},2)">Team 2 Wins</button></div></div>`}).join("");
+ v.innerHTML=`<div class="notice"><b>Live Open Play:</b> Tap the winning team button to record the result. The court will show <b>Start Next Round</b>; tap it when you are ready to begin the next game. Other courts continue playing without interruption.</div><div class="courts">${cards}</div><div class="actions" style="margin-top:12px"><button class="secondary" onclick="fillEmptyCourts()">↻ Fill Empty Courts</button></div>`;
+}
+function names(ids){return ids.map(id=>state.players.find(p=>p.id===id)?.name||(`Player ${id}`)).join(" + ")}
+function renderNextInLine(){
+ const target=document.getElementById("nextInLineList");
+ const count=document.getElementById("nextInLineCount");
+ if(!target)return;
+ const playingIds=new Set((state.currentGames||[]).filter(Boolean).flatMap(g=>[...(g.t1||[]),...(g.t2||[])]));
+ const waiting=state.players.filter(p=>p.active&&!p.resting&&!p.stopAfterGame&&!playingIds.has(p.id));
+ const waitingById=new Map(waiting.map(p=>[Number(p.id),p]));
+ const h=historyFor();
+ // Preview the same scheduler used by Start Next Round. This keeps the visible
+ // queue in the same order as the matchups the scheduler will actually assign.
+ const originalGames=state.currentGames;
+ const simulatedGames=(originalGames||[]).filter(Boolean).map(g=>({...g,t1:[...(g.t1||[])],t2:[...(g.t2||[])]}));
+ const scheduledIds=[];
+ try{
+   state.currentGames=simulatedGames;
+   for(let i=0;i<3;i++){
+     const next=nextGameForCourt(MAX_COURTS+i+1);
+     if(!next)break;
+     simulatedGames.push(next);
+     for(const id of [...(next.t1||[]),...(next.t2||[])]){
+       const numericId=Number(id);
+       if(waitingById.has(numericId)&&!scheduledIds.includes(numericId))scheduledIds.push(numericId);
+     }
+   }
+ }catch(err){console.warn('Could not preview next-in-line order',err);}
+ finally{state.currentGames=originalGames;}
+ // Players the scheduler would choose next appear first; the rest follow the
+ // same lowest-games-first fairness order used by the player-selection logic.
+ const projected={};
+ state.players.forEach(p=>projected[p.id]=h[p.id]?.games||0);
+ (state.currentGames||[]).forEach(g=>{if(g){[...(g.t1||[]),...(g.t2||[])].forEach(id=>{if(projected[id]!==undefined)projected[id]++;});}});
+ const remaining=waiting.filter(p=>!scheduledIds.includes(Number(p.id)));
+ remaining.sort((a,b)=>(projected[a.id]||0)-(projected[b.id]||0)||a.id-b.id);
+ const orderedIds=[...scheduledIds,...remaining.map(p=>Number(p.id))];
+ const ordered=orderedIds.map(id=>waitingById.get(id)).filter(Boolean);
+ if(count)count.textContent=`${waiting.length} waiting`;
+ if(!ordered.length){
+   target.innerHTML='<div class="next-line-empty">Everyone currently active is either playing or there are no players waiting.</div>';
+   return;
+ }
+ // Show only the next 12 waiting players. The first entries match the next
+ // game(s) the scheduler will assign when a court is ready.
+ target.innerHTML=ordered.slice(0,12).map((p,i)=>{
+   const games=h[p.id]?.games||0;
+   const level=(p.level||"Pickle");
+   return `<div class="next-line-player"><span class="queue-position">${i+1}</span><span class="queue-name">${esc(p.name)}</span><span class="queue-level ${level.toLowerCase()}">${esc(level)}</span><span class="queue-games">${games} ${games===1?'game':'games'}</span></div>`;
+ }).join("");
+}
+function renderStats(){
+ const map={};state.players.filter(p=>p.active||state.completedGames.some(g=>[...g.t1,...g.t2].includes(p.id))).forEach(p=>map[p.id]={p,g:0,w:0,l:0});
+ state.completedGames.forEach(g=>{let winnerTeam=g.winnerTeam;if(winnerTeam!==1&&winnerTeam!==2){if(g.s1===""||g.s2==="")return;const a=+g.s1,b=+g.s2;if(a===b)return;winnerTeam=a>b?1:2;}g.t1.forEach(id=>{if(map[id]){map[id].g++;if(winnerTeam===1)map[id].w++;else map[id].l++;}});g.t2.forEach(id=>{if(map[id]){map[id].g++;if(winnerTeam===2)map[id].w++;else map[id].l++;}})});
+ const renderLevel=(level,target)=>{const list=Object.values(map).filter(x=>(x.p.level||"Pickle")===level).sort((a,b)=>b.w-a.w||(b.g-a.g)||a.p.name.localeCompare(b.p.name));document.getElementById(target).innerHTML=list.map((x,i)=>`<tr><td><b>${i+1}</b></td><td><b class="resting-name">${x.p.resting?'<span class="resting-dot" title="Resting"></span>':''}${esc(x.p.name)}</b></td><td>${x.g}</td><td><b>${x.w}</b></td><td>${x.l}</td><td>${x.g?((x.w/x.g)*100).toFixed(1)+"%":"—"}</td></tr>`).join("")||`<tr><td colspan="6" class="empty">No ${level} players yet.</td></tr>`};renderLevel("Pickle","beginnerStats");renderLevel("PWR","intermediateStats");
+}
+function renderCounters(){const active=state.players.filter(p=>p.active);const playingIds=new Set((state.currentGames||[]).filter(Boolean).flatMap(g=>[...(g.t1||[]),...(g.t2||[])]));const waiting=active.filter(p=>!playingIds.has(p.id));document.getElementById("activeCount").textContent=active.length;document.getElementById("notPlayingCount").textContent=waiting.length;document.getElementById("beginnerActiveCount").textContent=active.filter(p=>(p.level||"Pickle")==="Pickle").length;document.getElementById("intermediateActiveCount").textContent=active.filter(p=>(p.level||"Pickle")==="PWR").length;document.getElementById("courtsUsedCount").textContent=state.currentGames.filter(Boolean).length;document.getElementById("gamesLockedCount").textContent=state.completedGames.length}
+function resetAll(){if(!confirm("Reset the entire open play session?"))return;localStorage.removeItem("picklepwr_open_play_live");localStorage.removeItem("picklepwr_live");localStorage.setItem("picklepwr_event_id",PICKLEPWR_PUBLIC_EVENT_ID);location.reload()}
+function clearPlayerSearch(){const e=document.getElementById("playerSearch");if(e)e.value="";renderPlayers()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+setup();
+// Public leaderboard startup is handled after all leaderboard functions are defined.
+// Controller state is published ONLY when save() is called after an actual change.
+// Do not publish on page load: that could overwrite newer cloud data with stale local state.
+</script>
+
+<style>
+/* Keep every Live Court card, including all score boxes, inside its container */
+.grid > section:nth-child(2) > .card:first-child{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.grid > section:nth-child(2) > .card:first-child #roundView{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+.grid > section:nth-child(2) > .card:first-child .courts{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.grid > section:nth-child(2) > .card:first-child .court{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.grid > section:nth-child(2) > .card:first-child .scorebox,
+.grid > section:nth-child(2) > .card:first-child .scorebox > div,
+.grid > section:nth-child(2) > .card:first-child .scorebox input{
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+}
+@media(max-width:1200px){
+  .grid > section:nth-child(2) > .card:first-child .courts{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:650px){
+  .grid > section:nth-child(2) > .card:first-child .courts{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<style>
+/* Wider Live Courts for full player names */
+.grid > section:nth-child(2) { min-width:0; }
+.grid > section:nth-child(2) > .card:first-child { overflow:visible; }
+.grid > section:nth-child(2) > .card:first-child .courts {
+  grid-template-columns:repeat(3,minmax(360px,1fr));
+  gap:16px;
+}
+.grid > section:nth-child(2) > .card:first-child .court {
+  padding:16px;
+}
+.grid > section:nth-child(2) > .card:first-child .teamnames {
+  white-space:nowrap;
+  font-size:15px;
+  letter-spacing:-.1px;
+}
+@media(max-width:1450px){
+  .grid > section:nth-child(2) > .card:first-child .courts {
+    grid-template-columns:repeat(3,minmax(300px,1fr));
+  }
+}
+@media(max-width:1200px){
+  .grid{grid-template-columns:1fr}
+  .grid > section:nth-child(2) > .card:first-child .courts {
+    grid-template-columns:repeat(2,minmax(300px,1fr));
+  }
+}
+@media(max-width:650px){
+  .grid > section:nth-child(2) > .card:first-child .courts {
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<style>
+/* Live Courts outer border exactly contains the existing 3 court cards */
+.grid > section:nth-child(2){min-width:0;}
+.grid > section:nth-child(2) > .card:first-child{width:100%;min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden;}
+.grid > section:nth-child(2) > .card:first-child .courts{width:100%;max-width:100%;min-width:0;box-sizing:border-box;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;overflow:visible;}
+.grid > section:nth-child(2) > .card:first-child .court{min-width:0;max-width:100%;box-sizing:border-box;}
+.grid > section:nth-child(2) > .card:first-child .teamnames{white-space:nowrap;}
+@media(max-width:1200px){.grid{grid-template-columns:1fr}.grid > section:nth-child(2) > .card:first-child .courts{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:650px){.grid > section:nth-child(2) > .card:first-child .courts{grid-template-columns:1fr;}}
+</style>
+
+<style>
+.clickable-player-name{cursor:pointer;display:inline-block;white-space:nowrap}.clickable-player-name:hover{text-decoration:underline}.inline-player-select{width:auto;max-width:180px;min-width:110px;padding:3px 5px;font-size:12px;box-sizing:border-box}
+/* Make the inline court player picker easy to reopen with a single tap. */
+.inline-player-select{min-height:36px;max-width:min(220px,70vw);padding:7px 9px;font-size:14px;line-height:1.2;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;z-index:2;pointer-events:auto;}
+</style>
+<div id="leaderboardQrModal" class="qr-modal" aria-hidden="true">
+  <div class="qr-dialog">
+    <button class="qr-close" type="button" onclick="closeLeaderboardQR()">×</button>
+    <h2>📱 Live Leaderboard</h2>
+    <p class="muted">Scan this QR code to open the leaderboard-only view.</p>
+    <img id="leaderboardQrImage" class="qr-image" alt="Leaderboard QR Code">
+    <div class="qr-url" id="leaderboardQrUrl"></div>
+    <button type="button" onclick="openLeaderboardView()">Open Leaderboard View</button>
+    <div class="notice" style="margin-top:12px">For phones to see the same live scores, this HTML must be hosted at a shared web address. The QR code opens the leaderboard view at the current page URL.</div>
+  </div>
+</div>
+<script>
+function leaderboardViewUrl(controller=false){
+  // Always generate QR/public links from the official PicklePWR Openplay site.
+  // This prevents an old GitHub Pages URL from being encoded in the QR.
+  const u=new URL("https://pickle-pwr.github.io/Openplay/");
+  u.searchParams.set('leaderboard','1');
+  // The public view always reads the permanent PicklePWR live leaderboard event.
+  u.searchParams.delete('event');
+  if(controller) u.searchParams.set('controller','1');
+  u.hash='leaderboard';
+  return u.href;
+}
+function showLeaderboardQR(){
+  const url=leaderboardViewUrl();
+  const img=document.getElementById('leaderboardQrImage');
+  const text=document.getElementById('leaderboardQrUrl');
+  if(img) img.src='https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data='+encodeURIComponent(url);
+  if(text) text.textContent=url;
+  const m=document.getElementById('leaderboardQrModal');
+  if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+}
+function closeLeaderboardQR(){
+  const m=document.getElementById('leaderboardQrModal');
+  if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+}
+function openLeaderboardView(){
+  const url=leaderboardViewUrl(true);
+  history.pushState({leaderboard:true,controller:true},"",url);
+  closeLeaderboardQR();
+  activateLeaderboardOnlyMode();
+  window.scrollTo(0,0);
+}
+function activateLeaderboardOnlyMode(){
+  const u=new URL(window.location.href);
+  if(u.hash!=='#leaderboard' && u.searchParams.get('leaderboard')!=='1')return;
+  document.body.classList.add('leaderboard-only');
+  const main=document.querySelector('main');
+  if(!main)return;
+  main.querySelectorAll('.card').forEach(c=>{
+    c.style.display=c.classList.contains('live-leaderboard-card')?'block':'none';
+  });
+  const lb=document.querySelector('.live-leaderboard-card');
+  if(lb){
+    lb.style.display='block';
+    lb.style.visibility='visible';
+    const btn=lb.querySelector('button[onclick="showLeaderboardQR()"]');
+    if(btn)btn.style.display='none';
+    const notice=lb.querySelector('.notice');
+    if(notice)notice.textContent='📱 PICKLEPWR LIVE LEADERBOARD • Live wins and Next in Line update automatically.';
+    startPublicLeaderboardLoop();
+  }
+  const header=document.querySelector('header');
+  if(header){
+    const isController=new URL(window.location.href).searchParams.get('controller')==='1';
+    header.innerHTML='<h1>⚡ PICKLEPWR LIVE LEADERBOARD</h1><small>Live Wins + Next in Line</small>'+(isController?'<button type="button" class="leaderboard-back-btn" onclick="exitLeaderboardView()">← Back to Main System</button>':'');
+  }
+}
+function exitLeaderboardView(){
+  const u=new URL(window.location.href);
+  u.searchParams.delete('leaderboard');
+  u.searchParams.delete('controller');
+  u.searchParams.delete('event');
+  u.hash='';
+  window.location.href=u.href;
+}
+window.addEventListener('storage',()=>{if(document.body.classList.contains('leaderboard-only')){renderStats();renderNextInLine();renderCounters();}});
+window.addEventListener('hashchange',()=>activateLeaderboardOnlyMode());
+
+// Activate leaderboard-only mode when the QR link is opened directly.
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',activateLeaderboardOnlyMode,{once:true});
+}else{
+  activateLeaderboardOnlyMode();
+}
+if(new URLSearchParams(location.search).get('leaderboard')==='1'){
+  // activateLeaderboardOnlyMode() starts exactly one 2-second public polling loop.
+  // Do not start a second independent loop here.
+}
+</script>
+<style>
+
+.next-in-line-section{margin:16px 0 20px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#f7fbfa;}
+.next-line-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+.next-line-header h3{margin:0 0 3px;}
+.queue-count{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;background:#e2eeeb;color:#17332f;white-space:nowrap;}
+.next-in-line-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+.next-line-player{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:9px 10px;background:#fff;border:1px solid #e5eeeb;border-radius:10px;min-width:0;}
+.queue-position{font-weight:900;text-align:center;color:#6d7d79;}
+.queue-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.queue-level{font-size:10px;font-weight:800;padding:4px 7px;border-radius:999px;background:#edf3f1;white-space:nowrap;}
+.queue-level.pwr{background:#edf1f7;}
+.queue-games{font-size:10px;color:#6d7d79;white-space:nowrap;}
+.next-line-empty{padding:12px;text-align:center;color:#6d7d79;background:#fff;border:1px dashed #cbdad6;border-radius:10px;font-size:12px;}
+@media(max-width:700px){.next-in-line-list{grid-template-columns:1fr;}.next-line-player{grid-template-columns:28px minmax(0,1fr) auto;}.queue-games{grid-column:2 / -1;grid-row:2;margin-top:-5px;}.queue-level{grid-column:3;grid-row:1;}}
+.qr-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.qr-modal.show{display:flex}
+.qr-dialog{position:relative;width:min(420px,100%);background:#fff;border-radius:18px;padding:24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.qr-dialog h2{margin-bottom:6px}.qr-dialog p{margin-top:0}
+.qr-close{position:absolute;right:10px;top:8px;background:transparent;color:#17332f;font-size:28px;padding:2px 9px}
+.qr-image{width:280px;height:280px;max-width:80vw;display:block;margin:14px auto;border-radius:8px;border:1px solid #dce8e4}
+.qr-url{font-size:10px;color:#6d7d79;word-break:break-all;margin:8px 0 14px}
+
+.leaderboard-back-btn{margin-top:12px;padding:9px 14px;border:0;border-radius:10px;background:#17332f;color:#fff;font-weight:800;cursor:pointer;}
+@media(max-width:700px){.leaderboard-back-btn{width:100%;}}
+.leaderboard-only main{max-width:1100px}.leaderboard-only .live-leaderboard-card{margin-top:0}
+.leaderboard-only .live-leaderboard-card>div[style*="grid-template-columns"]{display:grid!important}
+/* QR / leaderboard-only view: give each standings table full width so Win % is never clipped */
+.leaderboard-only .live-leaderboard-card>div[style*="grid-template-columns"]{
+  grid-template-columns:1fr!important;
+  gap:18px!important;
+}
+.leaderboard-only .live-leaderboard-card .tablewrap{
+  width:100%!important;
+  overflow:hidden!important;
+}
+.leaderboard-only .live-leaderboard-card .stats{
+  width:100%!important;
+  table-layout:fixed!important;
+}
+.leaderboard-only .live-leaderboard-card .stats th,
+.leaderboard-only .live-leaderboard-card .stats td{
+  padding:9px 7px;
+  font-size:13px;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:clip;
+}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(1),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(1){width:11%;}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(2),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(2){width:30%;}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(3),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(3){width:13%;}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(4),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(4){width:13%;}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(5),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(5){width:13%;}
+.leaderboard-only .live-leaderboard-card .stats th:nth-child(6),
+.leaderboard-only .live-leaderboard-card .stats td:nth-child(6){width:20%;}
+@media(max-width:700px){
+  .leaderboard-only .live-leaderboard-card{padding:16px 12px!important;}
+  .leaderboard-only .live-leaderboard-card .stats th,
+  .leaderboard-only .live-leaderboard-card .stats td{padding:8px 5px;font-size:12px;}
+  .leaderboard-only .live-leaderboard-card .stats th:nth-child(2),
+  .leaderboard-only .live-leaderboard-card .stats td:nth-child(2){width:29%;}
+  .leaderboard-only .live-leaderboard-card .stats th:nth-child(6),
+  .leaderboard-only .live-leaderboard-card .stats td:nth-child(6){width:21%;}
+}
+</style>
+
+<style>
+/* ===== PICKLEPWR CONTROLLER LOGIN / SECURITY ===== */
+#controllerAuthGate{position:fixed;inset:0;background:rgba(18,48,44,.96);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10000}
+#controllerAuthGate.hidden{display:none}
+.auth-box{width:min(420px,100%);background:#fff;border-radius:18px;padding:28px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.auth-box h2{margin:0 0 6px}.auth-box p{color:#6d7d79;font-size:13px;margin:0 0 18px}
+.auth-box label{margin-top:12px}.auth-box input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;box-sizing:border-box}
+.auth-box button{width:100%;margin-top:16px}.auth-error{display:none;margin-top:12px;padding:10px;border-radius:9px;background:#fff0f0;color:#a52b2b;font-size:12px}.auth-error.show{display:block}
+.auth-status{margin-top:10px;font-size:11px;color:#6d7d79;text-align:center;min-height:16px}
+.controller-security-badge{font-size:11px;font-weight:800;background:#e8f2ef;color:#17332f;padding:6px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}
+.controller-logout-btn{margin-left:8px;padding:7px 10px!important;font-size:11px!important;background:#e8f2ef!important;color:#17332f!important}
+</style>
+<div id="controllerAuthGate" aria-hidden="true">
+  <div class="auth-box">
+    <h2>🔐 PicklePWR Controller</h2>
+    <p>Controller access is restricted. The QR leaderboard remains public and read-only.</p>
+    <form id="controllerLoginForm">
+      <label for="controllerEmail">Email</label>
+      <input id="controllerEmail" type="email" autocomplete="username" required placeholder="Controller email">
+      <label for="controllerPassword">Password</label>
+      <input id="controllerPassword" type="password" autocomplete="current-password" required placeholder="Password">
+      <button id="controllerLoginBtn" type="submit">🔐 Login to Controller</button>
+      <div id="controllerAuthError" class="auth-error"></div>
+      <div id="controllerAuthStatus" class="auth-status"></div>
+    </form>
+  </div>
+</div>
+<script>
+/* ===== PICKLEPWR CONTROLLER AUTH ===== */
+const PP_AUTH_KEY="picklepwr_controller_session";
+function authEndpoint(path){return PICKLEPWR_CLOUD.url.replace(/\/$/,"")+"/auth/v1/"+path}
+function saveAuthSession(session){
+  ppAuthSession=session||null;
+  try{
+    if(session) sessionStorage.setItem(PP_AUTH_KEY,JSON.stringify(session));
+    else sessionStorage.removeItem(PP_AUTH_KEY);
+  }catch(e){}
+}
+function readAuthSession(){
+  try{return JSON.parse(sessionStorage.getItem(PP_AUTH_KEY)||"null")}catch(e){return null}
+}
+function authMessage(text){
+  const e=document.getElementById("controllerAuthError");
+  if(e){e.textContent=text||"";e.classList.toggle("show",!!text)}
+}
+function authStatus(text){const e=document.getElementById("controllerAuthStatus");if(e)e.textContent=text||""}
+function showControllerAuth(){const g=document.getElementById("controllerAuthGate");if(g){g.classList.remove("hidden");g.setAttribute("aria-hidden","false")}}
+function hideControllerAuth(){const g=document.getElementById("controllerAuthGate");if(g){g.classList.add("hidden");g.setAttribute("aria-hidden","true")}}
+async function refreshControllerSession(){
+  if(!ppAuthSession?.refresh_token)return false;
+  try{
+    const r=await fetch(authEndpoint("token?grant_type=refresh_token"),{method:"POST",headers:{"apikey":PICKLEPWR_CLOUD.anonKey,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:ppAuthSession.refresh_token})});
+    if(!r.ok)throw new Error("Session refresh failed");
+    const d=await r.json();
+    saveAuthSession({access_token:d.access_token,refresh_token:d.refresh_token||ppAuthSession.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000),email:d.user?.email||ppAuthSession.email||""});
+    return true;
+  }catch(e){saveAuthSession(null);return false}
+}
+async function ensureControllerSession(){
+  ppAuthSession=readAuthSession();
+  if(ppAuthSession?.access_token){
+    if(!ppAuthSession.expires_at || ppAuthSession.expires_at>Date.now()+60000){return true}
+    if(await refreshControllerSession())return true;
+  }
+  return false;
+}
+function addControllerSecurityBadge(){
+  if(document.body.classList.contains("leaderboard-only"))return;
+  const header=document.querySelector("header");if(!header||header.querySelector(".controller-security-badge"))return;
+  const wrap=document.createElement("div");
+  wrap.style.cssText="margin-top:10px;display:flex;align-items:center;flex-wrap:wrap;gap:6px";
+  const badge=document.createElement("span");badge.className="controller-security-badge";badge.textContent="🔒 Controller secured";
+  const logout=document.createElement("button");logout.type="button";logout.className="controller-logout-btn";logout.textContent="Logout";logout.onclick=logoutController;
+  wrap.appendChild(badge);wrap.appendChild(logout);header.appendChild(wrap);
+}
+async function loginController(email,password){
+  authMessage("");authStatus("Signing in…");
+  const btn=document.getElementById("controllerLoginBtn");if(btn)btn.disabled=true;
+  try{
+    const r=await fetch(authEndpoint("token?grant_type=password"),{method:"POST",headers:{"apikey":PICKLEPWR_CLOUD.anonKey,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error_description||d.msg||d.message||"Invalid email or password.");
+    saveAuthSession({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000),email:d.user?.email||email});
+    hideControllerAuth();
+    addControllerSecurityBadge();
+    authStatus("");
+    setCloudSyncStatus("☁️ Syncing…",null);
+    // Do not publish on login. Only a real controller save/change should publish.
+  }catch(e){authMessage(e.message||"Unable to sign in.");authStatus("");}
+  finally{if(btn)btn.disabled=false}
+}
+function logoutController(){
+  saveAuthSession(null);
+  location.reload();
+}
+async function initControllerSecurity(){
+  const isPublic=new URLSearchParams(location.search).get("leaderboard")==="1"||location.hash==="#leaderboard";
+  if(isPublic){hideControllerAuth();return}
+  const ok=await ensureControllerSession();
+  if(ok){
+    hideControllerAuth();
+    addControllerSecurityBadge();
+    setCloudSyncStatus("☁️ Syncing…",null);
+    // Do not publish on controller page load. Local state may be older than cloud.
+  }else{
+    showControllerAuth();
+    document.getElementById("controllerEmail")?.focus();
+    setCloudSyncStatus("🔐 Controller login required",null);
+  }
+}
+document.getElementById("controllerLoginForm")?.addEventListener("submit",e=>{e.preventDefault();loginController(document.getElementById("controllerEmail").value.trim(),document.getElementById("controllerPassword").value) });
+setInterval(async()=>{
+  if(!document.body.classList.contains("leaderboard-only")&&ppAuthSession?.refresh_token&&ppAuthSession.expires_at<Date.now()+120000){
+    await refreshControllerSession();
+  }
+},60000);
+initControllerSecurity();
+</script>
+
+</body>
+</html>
+<style>
+/* Reference-matched section sizing */
+.grid > section { min-width:0; }
+.grid > section > .card { width:100%; box-sizing:border-box; }
+.tablewrap { max-width:100%; }
+.stats { width:100%; table-layout:auto; }
+@media(max-width:1200px){
+  .courts{grid-template-columns:repeat(2,minmax(300px,1fr))}
+}
+@media(max-width:1050px){
+  .grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .courts{grid-template-columns:1fr}
+}
+</style>
